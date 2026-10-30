@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="60 首短影音背景音樂，依講故事、口播、VLOG、第一人稱、氛圍、搞笑六類整理，可試聽並連到 Instagram 音訊。">
+<meta property="og:title" content="短影音配樂庫">
+<meta property="og:description" content="60 首短影音 BGM，六種影片類型分類，附熱度與試聽連結。">
+<title>短影音配樂庫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky category rail on top, one track list per category, each row = number · title · actions */
+:root{
+  --bg:#f3f4f7; --surface:#ffffff; --ink:#15181f; --muted:#626b7c; --line:#dde1ea;
+  --accent:#2f5bd8; --accent-ink:#ffffff; --ig:#c13584; --chip:#e8ecf6; --hot:#e4572e; --hot-ink:#ffffff; --warm:#ffd9c7;
+  --display:"Noto Sans TC",system-ui,sans-serif; --body:"Noto Sans TC",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12141a; --surface:#1b1e26; --ink:#eceef3; --muted:#9aa2b3; --line:#2c303b;
+  --accent:#7d9bff; --accent-ink:#0d1020; --ig:#f06bb4; --chip:#252a36; --hot:#ff7a52; --hot-ink:#1a0d08; --warm:#4a2c22; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12141a; --surface:#1b1e26; --ink:#eceef3; --muted:#9aa2b3; --line:#2c303b;
+  --accent:#7d9bff; --accent-ink:#0d1020; --ig:#f06bb4; --chip:#252a36; --hot:#ff7a52; --hot-ink:#1a0d08; --warm:#4a2c22; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 64px}
+header h1{font-family:var(--display);font-weight:900;font-size:clamp(26px,5vw,36px);margin:0;letter-spacing:.02em;text-wrap:balance}
+header p{color:var(--muted);margin:6px 0 0;max-width:60ch}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 10px;margin-top:18px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 14px var(--body);
+  padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tools{display:flex;gap:8px;margin-top:10px}
+.sortbtn{flex:none}.sortbtn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.heat{font-size:12px;padding:1px 8px;border-radius:6px;font-weight:500}
+.heat.h3{background:var(--hot);color:var(--hot-ink)}.heat.h2{background:var(--warm);color:var(--ink)}
+.heat.h1,.heat.h0{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+.tnote{font-size:12.5px;color:var(--muted);margin-top:4px}
+.search{flex:1;min-width:0;font:15px var(--body);padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.cat-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin:26px 0 4px}
+.cat-head h2{font-family:var(--display);font-size:22px;font-weight:700;margin:0}
+.cat-head .mood{font-size:13px;color:var(--muted)}
+.tip{color:var(--muted);font-size:14px;margin:0 0 12px;max-width:65ch}
+ol.tracks{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.track{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 14px;border-top:1px solid var(--line)}
+.track:first-child{border-top:0}
+.num{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.name{font-weight:700;font-size:16px;overflow-wrap:anywhere}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.tag{font-size:12px;background:var(--chip);color:var(--muted);padding:1px 8px;border-radius:6px}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn{display:inline-flex;align-items:center;gap:5px;font:500 13px var(--body);text-decoration:none;cursor:pointer;
+  padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.ig{border-color:var(--ig);color:var(--ig)}
+.btn.ig.saved{background:var(--ig);color:var(--surface)}
+.btn svg{width:14px;height:14px;fill:currentColor}
+.linkrow{grid-column:2 / -1;display:flex;gap:6px}
+.linkrow input{flex:1;min-width:0;font:13px var(--mono);padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.empty{padding:18px;color:var(--muted);text-align:center}
+.note{margin-top:28px;font-size:13px;color:var(--muted);max-width:65ch}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);
+  padding:8px 14px;border-radius:999px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+@media (max-width:560px){.track{grid-template-columns:28px minmax(0,1fr)}.actions{grid-column:2;justify-content:flex-start;margin-top:6px}}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <h1>短影音配樂庫</h1>
+    <p>6 種影片類型、60 首常用配樂。點「試聽」到 YouTube 或 Spotify 聽，點「IG」找對應的 Instagram 音訊；找到正確的音訊頁後貼上連結，這台裝置就會記住，下次一鍵直達。熱度標示是交叉比對網路上的 BGM 歌單、文章與平台收錄量推估而來。</p>
+  </header>
+  <div class="rail">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="tools"><input class="search" id="q" type="search" placeholder="搜尋歌名或歌手…"><button class="btn sortbtn" id="sort" type="button" aria-pressed="false">依熱度排序</button></div>
+  </div>
+  <main id="list"></main>
+  <p class="note">熱度依據：2026 年 10 月查詢網易雲、QQ 音樂、酷狗、B 站、Spotify 與中文 BGM 推薦文章的收錄與提及量推估；抖音頁面不公開使用次數，所以不是精確數字。「剪映曲庫名」表示這是剪映或抖音曲庫裡的素材曲名，在一般音樂平台查不到，請直接在剪映 App 的音樂庫搜尋。試聽與 IG 按鈕是用歌名加歌手去搜尋，不是固定的單曲連結。</p>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+// [歌名, 歌手/版本, 熱度 3高 2中 1低 0未知, 搜尋字串, 備註]
+const CATS=[
+ {id:"story",name:"講故事類",mood:"抒情・鋪陳・有畫面",tip:"音樂要比人聲低很多，選前奏長、情緒慢慢推上去的曲子，故事轉折時剛好接到副歌。",
+  t:[["面会菜","林生祥（客家民謠原唱）",2,"面会菜 林生祥","原清單標林启得，查到的原唱是林生祥"],
+     ["Wish","",0,"Wish","剪映曲庫名，同名曲多"],
+     ["起风了","买辣椒也用券",3,"起风了 买辣椒也用券","當 BGM 常用鋼琴或純音樂版"],
+     ["大鱼","周深",3,"大鱼 周深","說故事多用純音樂或鋼琴版"],
+     ["城南花已开","三亩地",3,"城南花已开 三亩地","純音樂"],
+     ["Tides of time","",0,"Tides of time","剪映曲庫名"],
+     ["我记得","赵雷",2,"我记得 赵雷",""],
+     ["III","Athletics",2,"III Athletics","後搖，也標作 III (Find Yourself)"],
+     ["Sacred game","",0,"Sacred game","剪映曲庫名"],
+     ["kiss at dusk","",0,"kiss at dusk","剪映曲庫名"]]},
+ {id:"talk",name:"口播觀點類",mood:"輕快・不搶話・有節奏",tip:"口播最怕音樂有人聲，優先用純音樂；節奏穩定的 Funk 或輕電子能撐住語速。",
+  t:[["Void","",0,"Void","剪映曲庫名"],
+     ["所念皆星河","CMJ",3,"所念皆星河 CMJ","純音樂；房東的貓有同名人聲歌，別找錯"],
+     ["Upbeat Funk","",0,"Upbeat Funk","剪映曲庫名"],
+     ["Melody","",0,"Melody","剪映曲庫名"],
+     ["track in time","",0,"track in time","剪映曲庫名"],
+     ["化学元素周期表","",2,"化学元素周期表 DJ","背誦歌，抖音有 DJ 版影片"],
+     ["Monkeybiz","D1ofAquavibe",3,"Monkeybiz D1ofAquavibe","QQ音樂「抖音爆笑BGM」歌單收錄"],
+     ["Summer","久石让",3,"Summer 久石让 菊次郎的夏天","《菊次郎的夏天》"],
+     ["Life goes on","",0,"Life goes on","剪映曲庫名"],
+     ["Beach vibes","",0,"Beach vibes","剪映曲庫名"]]},
+ {id:"vlog",name:"生活 VLOG 類",mood:"日常・溫暖・鬆弛",tip:"跟著畫面剪接點走節拍，鏡頭切換落在鼓點上，日常感會更順。",
+  t:[["鎏嘉码头","柏瞳",0,"鎏嘉码头 柏瞳","原清單寫作「鉴嘉码头」"],
+     ["3:30PM","",0,"3:30PM","剪映曲庫名"],
+     ["Everywhere We Go","陈冠希、应采儿、MC仁、厨房仔",3,"Everywhere We Go 陈冠希",""],
+     ["夏日漱石","橘子海 Orange Ocean",3,"夏日漱石 橘子海",""],
+     ["Across the Room","可能是 ODESZA ft. Leon Bridges",0,"Across the Room ODESZA",""],
+     ["Countless","",0,"Countless","剪映曲庫名"],
+     ["Letting go","蔡健雅",3,"Letting go 蔡健雅",""],
+     ["Time to love","",0,"Time to love","剪映曲庫名"],
+     ["写在风中的信","July（鋼琴原曲）",2,"写在风中的信 July","另有江鹤川等人聲版"],
+     ["How High","",0,"How High","剪映曲庫名"]]},
+ {id:"pov",name:"第一人稱視角拍攝類",mood:"DJ・帶入感・節奏強",tip:"第一人稱畫面常用 DJ 版本，重拍明顯，適合走路、開門、轉身這類動作卡點。",
+  t:[["天真的橡皮（DJ）","白水寒",2,"天真的橡皮 白水寒 DJ","另有王小帅版"],
+     ["天若有情（DJ）","A-Lin 原唱・池鱼 DJ 版",2,"天若有情 DJ 池鱼",""],
+     ["Say It Right","Nelly Furtado",2,"Say It Right Nelly Furtado",""],
+     ["孤身（DJ）","徐秉龙・Dj小麒 Mix",3,"孤身 徐秉龙 DJ",""],
+     ["有何不可（DJ）","许嵩",2,"有何不可 许嵩 DJ",""],
+     ["噜噜进行曲（DJ）","",0,"噜噜进行曲 DJ","各大平台查不到"],
+     ["After Hours","Kehlani 或 The Weeknd",0,"After Hours","兩首同名，抖音版本未確認"],
+     ["快乐阿拉蕾","邵雨涵・DJ小可",2,"快乐阿拉蕾 DJ",""],
+     ["Do it（转场音乐）","",0,"Do it 转场","剪映曲庫名"],
+     ["Old school","",0,"Old school","剪映曲庫名"]]},
+ {id:"mood",name:"氛圍感類",mood:"慢・空・有呼吸感",tip:"畫面留白多、字幕少的時候用；搭配慢動作或空鏡，讓音樂自己說話。",
+  t:[["running up on hill","北北昼（氛圍版）",3,"running up on hill 氛围版","原曲 Kate Bush〈Running Up That Hill〉；另有 0.8X 降速版"],
+     ["time machine","可能是 mj apanay & aren park",2,"time machine mj apanay",""],
+     ["夜幕之下","小曲儿／白翎",2,"夜幕之下 小曲儿",""],
+     ["同频才能共鸣","",0,"同频才能共鸣","各大平台查不到"],
+     ["风吹雾","Adoreya",3,"风吹雾 Adoreya",""],
+     ["下雨的时候","Secret Garden",1,"下雨的时候 Secret Garden","另有張毅同名純音樂"],
+     ["in the silence","",0,"in the silence","剪映曲庫名"],
+     ["丁达尔的梦","Youzee Music",2,"丁达尔的梦 纯音乐","純音樂"],
+     ["春日狂想","洛克王國 BGM",2,"春日狂想 洛克王国",""],
+     ["日光与鸢尾的信","",0,"日光与鸢尾的信","各大平台查不到"]]},
+ {id:"fun",name:"搞笑整活類",mood:"反差・魔性・梗",tip:"搞笑音樂靠「突然進來」製造反差，留 0.5 秒停頓再下音樂，笑點會更明顯。",
+  t:[["Frolic","Luciano Michelini",3,"Frolic Luciano Michelini","《Curb Your Enthusiasm》主題曲，全球通用尷尬梗"],
+     ["Si Tu Vois Ma Mère","Sidney Bechet",2,"Si Tu Vois Ma Mere Sidney Bechet","《午夜巴黎》原聲"],
+     ["光头强小曲（DJ）","熊出沒 DJ 改編",2,"光头强 小曲 DJ","版本多，未確認是哪一版"],
+     ["我就皮一下哈哈哈","",0,"我就皮一下哈哈哈","各大平台查不到"],
+     ["斗牛旋律","España Cañí",2,"斗牛 España Cañí","西班牙鬥牛士進行曲"],
+     ["Monkeybiz","D1ofAquavibe",3,"Monkeybiz D1ofAquavibe",""],
+     ["伏黑甚尔进行曲","〈幻晝〉DJ/FUNK 改編",3,"伏黑甚尔 幻昼 DJ","網路梗名"],
+     ["Buttercup","Jack Stauber",3,"Buttercup Jack Stauber",""],
+     ["早安大森林","熊出沒片尾曲",2,"早安大森林 熊出没",""],
+     ["Whoo（拉丁恰恰）","",0,"Whoo 恰恰","各大平台查不到"]]}
+];
+const ICON={play:'<svg viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z"/></svg>',
+ ig:'<svg viewBox="0 0 16 16"><path d="M8 4.2A3.8 3.8 0 1 0 8 11.8 3.8 3.8 0 0 0 8 4.2zm0 6.2A2.4 2.4 0 1 1 8 5.6a2.4 2.4 0 0 1 0 4.8zM12 3a.9.9 0 1 1-1.8 0A.9.9 0 0 1 12 3zM8 1.4c1.8 0 2 0 2.7.1 1.8.1 2.6.9 2.7 2.7.1.7.1.9.1 2.7v2.2c0 1.8 0 2-.1 2.7-.1 1.8-.9 2.6-2.7 2.7-.7.1-.9.1-2.7.1s-2 0-2.7-.1c-1.8-.1-2.6-.9-2.7-2.7C2.5 11 2.5 10.8 2.5 9V7c0-1.8 0-2 .1-2.7.1-1.8.9-2.6 2.7-2.7.7-.1.9-.1 2.7-.1zM8 0C6.2 0 6 0 5.2.1 2.6.2 1.2 1.6 1.1 4.2 1 5 1 5.2 1 7v2c0 1.8 0 2 .1 2.8.1 2.6 1.5 4 4.1 4.1.8.1 1 .1 2.8.1s2 0 2.8-.1c2.6-.1 4-1.5 4.1-4.1.1-.8.1-1 .1-2.8V7c0-1.8 0-2-.1-2.8C14.8 1.6 13.4.2 10.8.1 10 0 9.8 0 8 0z"/></svg>',
+ copy:'<svg viewBox="0 0 16 16"><path d="M5 1h8a2 2 0 0 1 2 2v8h-2V3H5zM1 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2zm2 0v8h6V5z"/></svg>'};
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||"{}")}catch(e){return{}}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let links=store.get("bgm-ig-links");
+let sortHeat=false;
+let active=(()=>{try{return localStorage.getItem("bgm-tab")||"story"}catch(e){return"story"}})();
+const enc=s=>encodeURIComponent(s);
+const clean=s=>s.replace(/（.*?）/g,"").trim();
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dupes=(()=>{const c={};CATS.forEach(x=>x.t.forEach(([n])=>c[n]=(c[n]||0)+1));return c})();
+
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),1600)}
+
+const HEAT=["未知","低","中","高"];
+function row(cat,i,[name,artist,heat,query,note]){
+  const key=cat.id+"-"+i, q=query||clean(name), qBGM=q;
+  const saved=links[key];
+  const tags=[`<span class="heat h${heat}" title="短影音熱度">${heat?"熱度":"熱度"} ${HEAT[heat]}</span>`,artist&&`<span class="tag">${esc(artist)}</span>`,/DJ/.test(name)&&'<span class="tag">DJ 版</span>',/转场/.test(name)&&'<span class="tag">轉場</span>',dupes[name]>1&&'<span class="tag">兩類通用</span>'].filter(Boolean).join("");
+  return `<li class="track" data-key="${key}">
+    <span class="num">${String(i+1).padStart(2,"0")}</span>
+    <div style="min-width:0"><div class="name">${esc(name)}</div>${tags?`<div class="meta">${tags}</div>`:""}${note?`<div class="tnote">${esc(note)}</div>`:""}</div>
+    <div class="actions">
+      <a class="btn" href="https://www.youtube.com/results?search_query=${enc(qBGM)}" target="_blank" rel="noopener">${ICON.play}試聽</a>
+      <a class="btn" href="https://open.spotify.com/search/${enc(q)}" target="_blank" rel="noopener">Spotify</a>
+      <a class="btn ig${saved?" saved":""}" href="${saved?esc(saved):"https://www.instagram.com/explore/search/keyword/?q="+enc(q)}" target="_blank" rel="noopener">${ICON.ig}${saved?"IG 音訊":"IG 搜尋"}</a>
+      <button class="btn" data-act="copy" data-q="${esc(q)}" type="button" aria-label="複製歌名">${ICON.copy}</button>
+      <button class="btn" data-act="edit" type="button">${saved?"改連結":"貼連結"}</button>
+    </div>
+    <div class="linkrow" hidden>
+      <input id="in-${key}" type="url" placeholder="貼上 instagram.com/reels/audio/… 連結" value="${saved?esc(saved):""}">
+      <button class="btn" data-act="save" type="button">儲存</button>
+    </div>
+  </li>`;
+}
+
+function render(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  document.getElementById("tabs").innerHTML=CATS.map(c=>`<button class="tab" role="tab" aria-selected="${!q&&c.id===active}" data-id="${c.id}">${c.name}</button>`).join("");
+  const show=q?CATS:CATS.filter(c=>c.id===active);
+  const html=show.map(c=>{
+    let items=c.t.map((t,i)=>[t,i]).filter(([[n,a]])=>!q||(n+a).toLowerCase().includes(q));
+    if(sortHeat)items=items.slice().sort((x,y)=>y[0][2]-x[0][2]);
+    if(q&&!items.length)return"";
+    return `<section><div class="cat-head"><h2>${c.name}</h2><span class="mood">${c.mood}</span></div>
+      ${q?"":`<p class="tip">${c.tip}</p>`}
+      <ol class="tracks">${items.map(([t,i])=>row(c,i,t)).join("")}</ol></section>`}).join("");
+  document.getElementById("list").innerHTML=html||'<p class="empty">找不到符合的歌名。</p>';
+}
+
+document.getElementById("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;
+  active=b.dataset.id;document.getElementById("q").value="";try{localStorage.setItem("bgm-tab",active)}catch(err){}render();scrollTo({top:0})});
+document.getElementById("q").addEventListener("input",render);
+document.getElementById("sort").addEventListener("click",e=>{sortHeat=!sortHeat;e.currentTarget.setAttribute("aria-pressed",sortHeat);e.currentTarget.textContent=sortHeat?"依熱度排序中":"依熱度排序";render()});
+document.getElementById("list").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-act]");if(!b)return;const li=b.closest(".track"),key=li.dataset.key;
+  if(b.dataset.act==="copy"){const t=b.dataset.q;
+    navigator.clipboard?.writeText(t).then(()=>toast("已複製：「"+t+"」")).catch(()=>toast(t));if(!navigator.clipboard)toast(t)}
+  if(b.dataset.act==="edit"){const r=li.querySelector(".linkrow");r.hidden=!r.hidden;if(!r.hidden)r.querySelector("input").focus()}
+  if(b.dataset.act==="save"){const v=li.querySelector("input").value.trim();
+    if(v&&!/^https:\/\/(www\.)?instagram\.com\//.test(v)){toast("請貼上 instagram.com 開頭的連結");return}
+    if(v)links[key]=v;else delete links[key];store.set("bgm-ig-links",links);render();toast(v?"已儲存 IG 音訊連結":"已清除連結")}
+});
+render();
+</script>
+
+</body>
+</html>
